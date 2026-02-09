@@ -149,6 +149,15 @@ Vector4.__pow = function (a, b)
 end
 
 
+Vector4.__clamp = function (a,min,max)
+	a.x = math.clamp(a.x,min.x,max.x)
+	a.y = math.clamp(a.y,min.y,max.y)
+	a.z = math.clamp(a.z,min.z,max.z)
+	a.w = math.clamp(a.w,min.w,max.w)
+	return a
+end
+
+
 ---@return string
 Vector4.__tostring = function (a)
 	return "("..tostring(a.x) .. ","..tostring(a.y)..","..tostring(a.z)..","..tostring(a.w)..")"

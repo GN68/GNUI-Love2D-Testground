@@ -29,7 +29,7 @@ local Vector2 = {}
 function Vector2.new(x,y)
 	local self
 	if type(x) == "Vector2" then
-		self = x:clone()
+		self = x:copy()
 	else
 		self = {
 			x=x or 0,
@@ -87,25 +87,25 @@ end
 
 
 Vector2.__add = function (a,b)
-	return a:clone():add(b,b)
+	return a:copy():add(b,b)
 end
 
 
 ---@return Vector2
 Vector2.__sub = function (a,b)
-	return a:clone():sub(b,b)
+	return a:copy():sub(b,b)
 end
 
 
 ---@return Vector2
 Vector2.__mul = function (a,b)
-	return a:clone():mul(b,b)
+	return a:copy():mul(b,b)
 end
 
 
 ---@return Vector2
 Vector2.__div = function (a,b)
-	return a:clone():div(b,b)
+	return a:copy():div(b,b)
 end
 
 
@@ -119,13 +119,20 @@ end
 
 ---@return Vector2
 Vector2.__mod = function (a,b)
-	return a:clone():mod(b,b)
+	return a:copy():mod(b,b)
 end
 
 
 ---@return Vector2
 Vector2.__pow = function (a, b)
-	return a:clone():pow(b,b)
+	return a:copy():pow(b,b)
+end
+
+
+Vector2.__clamp = function (a,min,max)
+	a.x = math.clamp(a.x,min.x,max.x)
+	a.y = math.clamp(a.y,min.y,max.y)
+	return a
 end
 
 
@@ -151,18 +158,20 @@ Vector2.__len = function (a)
 end
 
 
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, value: number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
 function Vector2:set(x,y)
-	self:rawset(x,y)
+	self:rawset(x,y or x)
 	self.VALUES_CHANGED:invoke(self.x,self.y)
 	return self
 end
 
 
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, values : number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
@@ -173,13 +182,14 @@ function Vector2:rawset(x,y)
 		self.y = x.y
 	else
 		self.x = x
-		self.y = y
+		self.y = (y or x)
 	end
 	return self
 end
 
 
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, values : number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
@@ -190,14 +200,15 @@ function Vector2:add(x,y)
 		self.y = self.y + x.y
 	else
 		self.x = self.x + x
-		self.y = self.y + y
+		self.y = self.y + (y or x)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y)
 	return self
 end
 
 
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, value: number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
@@ -208,14 +219,15 @@ function Vector2:sub(x,y)
 		self.y = self.y - x.y
 	else
 		self.x = self.x - x
-		self.y = self.y - y
+		self.y = self.y - (y or x)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y)
 	return self
 end
 
 
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, value: number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
@@ -226,14 +238,15 @@ function Vector2:mul(x,y)
 		self.y = self.y * x.y
 	else
 		self.x = self.x * x
-		self.y = self.y * y
+		self.y = self.y * (y or x)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y)
 	return self
 end
 
 
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, value: number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
@@ -244,7 +257,7 @@ function Vector2:div(x,y)
 		self.y = self.y / x.y
 	else
 		self.x = self.x / (x or 1)
-		self.y = self.y / (y or 1)
+		self.y = self.y / (y or x or 1)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y)
 	return self
@@ -252,7 +265,8 @@ end
 
 
 ---Applies a modulus to the Vector2
----@overload fun(self : Vector2, vec2 : Vector2)
+---@overload fun(self : Vector2, vec2 : Vector2): Vector2
+---@overload fun(self : Vector2, value: number): Vector2
 ---@param x number
 ---@param y number
 ---@return Vector2
@@ -263,7 +277,7 @@ function Vector2:mod(x,y)
 		self.y = self.y % x.y
 	else
 		self.x = self.x % x
-		self.y = self.y % y
+		self.y = self.y % (y or x)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y)
 	return self
@@ -362,6 +376,7 @@ function Vector2:rotate(angle)
 	self.y = math.sin(d) * self.x + math.cos(d) * self.y
 	return self
 end
+
 
 
 return Vector2

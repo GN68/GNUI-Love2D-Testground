@@ -145,6 +145,14 @@ Vector3.__pow = function (a, b)
 end
 
 
+Vector3.__clamp = function (a,min,max)
+	a.x = math.clamp(a.x,min.x,max.x)
+	a.y = math.clamp(a.y,min.y,max.y)
+	a.z = math.clamp(a.z,min.z,max.z)
+	return a
+end
+
+
 ---@return string
 Vector3.__tostring = function (a)
 	return "("..tostring(a.x) .. ","..tostring(a.y)..","..tostring(a.z)..")"
@@ -171,19 +179,21 @@ Vector3.__len = function (a)
 end
 
 
----@overload fun(self : Vector3, vec3 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3): Vector3
+---@overload fun(self : Vector3, value: number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
 ---@return Vector3
 function Vector3:set(x,y,z)
-	self:rawset(x,y,z)
+	self:rawset(x,y or x,z or x)
 	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
 end
 
 
----@overload fun(self : Vector3, vec3 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3): Vector3
+---@overload fun(self : Vector3, value: number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
@@ -203,7 +213,8 @@ function Vector3:rawset(x,y,z)
 end
 
 
----@overload fun(self : Vector3, vec3 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3): Vector3
+---@overload fun(self : Vector3, value: number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
@@ -216,15 +227,16 @@ function Vector3:add(x,y,z)
 		self.z = self.z + x.z
 	else
 		self.x = self.x + x
-		self.y = self.y + y
-		self.z = self.z + z
+		self.y = self.y + y or x
+		self.z = self.z + z or x
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
 end
 
 
----@overload fun(self : Vector3, vec3 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3): Vector3
+---@overload fun(self : Vector3, value: number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
@@ -237,15 +249,16 @@ function Vector3:sub(x,y,z)
 		self.z = self.z - x.z
 	else
 		self.x = self.x - x
-		self.y = self.y - y
-		self.z = self.z - z
+		self.y = self.y - y or x
+		self.z = self.z - z or x
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
 end
 
 
----@overload fun(self : Vector3, vec3 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3): Vector3
+---@overload fun(self : Vector3, value : number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
@@ -258,15 +271,16 @@ function Vector3:mul(x,y,z)
 		self.z = self.z * x.z
 	else
 		self.x = self.x * x
-		self.y = self.y * y
-		self.z = self.z * z
+		self.y = self.y * y or x
+		self.z = self.z * z or x
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
 end
 
 
----@overload fun(self : Vector3, vec3 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3): Vector3
+---@overload fun(self : Vector3, value: number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
@@ -279,8 +293,8 @@ function Vector3:div(x,y,z)
 		self.z = self.z / x.z
 	else
 		self.x = self.x / (x or 1)
-		self.y = self.y / (y or 1)
-		self.z = self.z / (z or 1)
+		self.y = self.y / (y or x or 1)
+		self.z = self.z / (z or x or 1)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
@@ -301,8 +315,8 @@ function Vector3:mod(x,y,z)
 		self.z = self.z % x.z
 	else
 		self.x = self.x % x
-		self.y = self.y % y
-		self.z = self.z % z
+		self.y = self.y % (y or x)
+		self.z = self.z % (z or x)
 	end
 	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
