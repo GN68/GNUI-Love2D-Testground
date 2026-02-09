@@ -30,14 +30,13 @@ function Vector2.new(x,y)
 	local self
 	if type(x) == "Vector2" then
 		self = x:copy()
-	else
-		self = {
-			x=x or 0,
-			y=y or 0,
-			VALUES_CHANGED = event.new()
-		}
-		setmetatable(self,Vector2)
 	end
+	self = {
+		x=x or 0,
+		y=y or 0,
+		VALUES_CHANGED = event.new()
+	}
+	setmetatable(self,Vector2)
 	return self
 end
 

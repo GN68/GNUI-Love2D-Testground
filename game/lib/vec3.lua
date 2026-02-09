@@ -4,6 +4,7 @@
 / /_/ / /|  /  / ___ / /_/ / /  / / /_/ / __/ /_/ />  </ /_/ / / /  / /  
 \____/_/ |_/  /_/  |_\__,_/_/  /_/\__,_/_/  \____/_/|_|\__, /_/_/  /_/
 --A Vector3 library for easy ease                     /____]]
+local Vector2 = require("lib.vec2")
 
 local event = require("lib.event")
 
@@ -33,15 +34,14 @@ function Vector3.new(x,y,z)
 	if type(x) == "Vector3" then
 		local v = x
 		x,y,z = v.x,v.y,v.z
-	else
-		self = {
-			x=x or 0,
-			y=y or 0,
-			z=z or 0,
-			VALUES_CHANGED = event.new()
-		}
-		setmetatable(self,Vector3)
 	end
+	self = {
+		x=x or 0,
+		y=y or 0,
+		z=z or 0,
+		VALUES_CHANGED = event.new()
+	}
+	setmetatable(self,Vector3)
 	return self
 end
 
@@ -50,8 +50,8 @@ Vector3.__index = function (t,k)
 	local val = rawget(Vector3,k)
 	if val then
 		return val
-	elseif type(k) == "string" and k:match('^[xy_]+$') then -- swizzling
-		if #k == 2 then
+	elseif type(k) == "string" and k:match('^[xyz_]+$') then -- swizzling
+		if #k == 3 then
 			local x = k:sub(1,1)
 			local y = k:sub(2,2)
 			local z = k:sub(3,3)
@@ -61,7 +61,7 @@ Vector3.__index = function (t,k)
 			local x = k:sub(1,1)
 			local y = k:sub(2,2)
 			t.VALUES_CHANGED:invoke()
-			return Vector3.new(t[x] or 0, t[y] or 0)
+			return Vector2.new(t[x] or 0, t[y] or 0)
 		elseif #k == 1 then
 			t.VALUES_CHANGED:invoke()
 			return t[k]

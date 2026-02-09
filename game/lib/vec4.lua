@@ -4,6 +4,8 @@
 / /_/ / /|  /  / ___ / /_/ / /  / / /_/ / __/ /_/ />  </ /_/ / / /  / /  
 \____/_/ |_/  /_/  |_\__,_/_/  /_/\__,_/_/  \____/_/|_|\__, /_/_/  /_/
 --A Vector4 library for easy ease                     /____]]
+local Vector3 = require("lib.vec3")
+local Vector2 = require("lib.vec2")
 
 local event = require("lib.event")
 
@@ -35,16 +37,15 @@ function Vector4.new(x,y,z,w)
 	if type(x) == "Vector4" then
 		local v = x
 		x,y,z,w = v.x,v.y,v.z,v.w
-	else
-		self = {
-			x = x or 0,
-			y = y or 0,
-			z = z or 0,
-			w = w or 0,
-			VALUES_CHANGED = event.new()
-		}
-		setmetatable(self,Vector4)
 	end
+	self = {
+		x = x or 0,
+		y = y or 0,
+		z = z or 0,
+		w = w or 0,
+		VALUES_CHANGED = event.new()
+	}
+	setmetatable(self,Vector4)
 	return self
 end
 
@@ -53,20 +54,23 @@ Vector4.__index = function (t,k)
 	local val = rawget(Vector4,k)
 	if val then
 		return val
-	elseif type(k) == "string" and k:match('^[xy_]+$') then -- swizzling
-		if #k == 2 then
+	elseif type(k) == "string" and k:match('^[xyzw_]+$') then -- swizzling
+		if #k == 4 then
 			local x = k:sub(1,1)
 			local y = k:sub(2,2)
 			local z = k:sub(3,3)
-			t.VALUES_CHANGED:invoke()
-			return Vector4.new(t[x] or 0, t[y] or 0, t[z] or 0)
+			local w = k:sub(4,4)
+			return Vector4.new(t[x] or 0, t[y] or 0, t[z] or 0, t[w] or 0)
+		elseif #k == 3 then
+			local x = k:sub(1,1)
+			local y = k:sub(2,2)
+			local z = k:sub(3,3)
+			return Vector3.new(t[x] or 0, t[y] or 0, t[z] or 0)
 		elseif #k == 2 then
 			local x = k:sub(1,1)
 			local y = k:sub(2,2)
-			t.VALUES_CHANGED:invoke()
-			return Vector4.new(t[x] or 0, t[y] or 0)
+			return Vector2.new(t[x] or 0, t[y] or 0)
 		elseif #k == 1 then
-			t.VALUES_CHANGED:invoke()
 			return t[k]
 		end
 	end
@@ -106,25 +110,25 @@ end
 
 
 Vector4.__add = function (a,b)
-	return a:copy():add(b,b)
+	return a:copy():add(b)
 end
 
 
 ---@return Vector4
 Vector4.__sub = function (a,b)
-	return a:copy():sub(b,b)
+	return a:copy():sub(b)
 end
 
 
 ---@return Vector4
 Vector4.__mul = function (a,b)
-	return a:copy():mul(b,b)
+	return a:copy():mul(b)
 end
 
 
 ---@return Vector4
 Vector4.__div = function (a,b)
-	return a:copy():div(b,b)
+	return a:copy():div(b)
 end
 
 
@@ -388,8 +392,9 @@ end
 ---@return number
 ---@return number
 ---@return number
+---@return number
 function Vector4:unpack()
-	return self.x, self.y, self.z
+	return self.x, self.y, self.z, self.w
 end
 
 
