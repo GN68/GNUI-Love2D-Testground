@@ -23,7 +23,7 @@ local event = require("lib.event")
 local Vector3 = {}
 
 ---Creates a new Vector3.
----@overload fun(vec2:Vector3): Vector3
+---@overload fun(vec3:Vector3): Vector3
 ---@param x number?
 ---@param y number?
 ---@param z number?
@@ -155,7 +155,11 @@ end
 Vector3.__concat = function (a,b)
 ---@diagnostic disable-next-line: param-type-mismatch
 	local new
-	new = Vector3.new(tonumber(tostring(a.x) .. tostring(b.x)),tonumber(tostring(a.y) .. tostring(b.y)))
+	new = Vector3.new(
+		tonumber(tostring(a.x) .. tostring(b.x)),
+		tonumber(tostring(a.y) .. tostring(b.y)),
+		tonumber(tostring(a.z) .. tostring(b.z))
+	)
 	a.VALUES_CHANGED:invoke(a)
 	return new
 end
@@ -167,7 +171,7 @@ Vector3.__len = function (a)
 end
 
 
----@overload fun(self : Vector3, vec2 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3)
 ---@param x number
 ---@param y number
 ---@param z number
@@ -199,7 +203,7 @@ function Vector3:rawset(x,y,z)
 end
 
 
----@overload fun(self : Vector3, vec2 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3)
 ---@param x number
 ---@param y number
 ---@param z number
@@ -220,7 +224,7 @@ function Vector3:add(x,y,z)
 end
 
 
----@overload fun(self : Vector3, vec2 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3)
 ---@param x number
 ---@param y number
 ---@param z number
@@ -236,14 +240,15 @@ function Vector3:sub(x,y,z)
 		self.y = self.y - y
 		self.z = self.z - z
 	end
-	self.VALUES_CHANGED:invoke(self.x,self.y)
+	self.VALUES_CHANGED:invoke(self.x,self.y,self.z)
 	return self
 end
 
 
----@overload fun(self : Vector3, vec2 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3)
 ---@param x number
 ---@param y number
+---@param z number
 ---@return Vector3
 function Vector3:mul(x,y,z)
 	local t = type(x)
@@ -261,7 +266,7 @@ function Vector3:mul(x,y,z)
 end
 
 
----@overload fun(self : Vector3, vec2 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3)
 ---@param x number
 ---@param y number
 ---@param z number
@@ -283,7 +288,7 @@ end
 
 
 ---Applies a modulus to the Vector3
----@overload fun(self : Vector3, vec2 : Vector3)
+---@overload fun(self : Vector3, vec3 : Vector3)
 ---@param x number
 ---@param y number
 ---@param z number
