@@ -168,7 +168,6 @@ Vector3.__concat = function (a,b)
 		tonumber(tostring(a.y) .. tostring(b.y)),
 		tonumber(tostring(a.z) .. tostring(b.z))
 	)
-	a.VALUES_CHANGED:invoke(a)
 	return new
 end
 

@@ -67,5 +67,6 @@ end
 
 
 function love.draw()
+	love.graphics.setBackgroundColor(0.5,0.5,0.6)
 	screen:draw()
 end
