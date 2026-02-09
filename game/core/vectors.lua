@@ -1,10 +1,12 @@
 ---@diagnostic disable: lowercase-global
 local vec2 = require("lib.vec2")
 local vec3 = require("lib.vec3")
+local vec4 = require("lib.vec4")
 
 ---@overload fun(x:number): number
 ---@overload fun(x:number, y:number): Vector2
 ---@overload fun(x:number, y:number, z:number): Vector3
+---@overload fun(x:number, y:number, z:number, w:number): Vector3
 ---@param x number
 ---@param y number
 ---@param z number
@@ -13,6 +15,9 @@ function vec(x,y,z,w)
 	if x then
 		if y then
 			if z then
+				if w then
+					return vec4(x,y,z,w)
+				end
 				return vec3(x,y,z)
 			end
 			return vec2(x,y)
