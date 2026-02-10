@@ -88,6 +88,7 @@ end
 
 local isShift = false
 function love.keypressed(key, scancode, isrepeat)
+	print(remap.char2id(scancode),scancode,key)
 	screen:inputKey(remap.char2id(key) or 0,isrepeat and 2 or 1)
 end
 
