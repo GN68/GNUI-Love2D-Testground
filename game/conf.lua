@@ -22,15 +22,15 @@ function love.conf(t)
 
 	t.window.title          = "LÖVE 2D - GNUI (Debug)"
 	t.window.icon           = nil
-	t.window.width          = 800
-	t.window.height         = 600
+	t.window.width          = 300
+	t.window.height         = 400
 	t.window.borderless     = false
 	t.window.resizable      = true
 	t.window.minwidth       = 1
 	t.window.minheight      = 1
 	t.window.fullscreen     = false
 	t.window.fullscreentype = "desktop"
-	t.window.vsync          = 1
+	t.window.vsync          = 0
 	t.window.msaa           = 0
 	t.window.depth          = nil
 	t.window.stencil        = nil
