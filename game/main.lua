@@ -15,9 +15,9 @@ local screen = GNUI.getScreen()
 local box = GNUI.parse(screen,{
 	
 	layout = "VERTICAL",
-	size = vec(200,-1),
+	size = vec(100,-1),
 	childAlign = vec(-1,0),
-	sizing = {"FIXED","FIT"},
+	sizing = {"FILL","FILL"},
 	padding = vec(2,2,2,2),
 	gap = 0,
 	
@@ -56,7 +56,7 @@ local box = GNUI.parse(screen,{
 })
 
 screen:addChild(box)
-box:setPos(10,10)
+
 
 love.keyboard.setKeyRepeat(true)
 local font
@@ -66,8 +66,11 @@ function love.load()
 	font:setLineHeight(2)
 end
 
+local utils = require("lib.GNUI.utils")
+
 function love.update()
 	screen:flushUpdates()
+	screen:setSize(utils.getScreenSize()/3)
 end
 
 function love.mousemoved(x,y)
@@ -88,7 +91,6 @@ end
 
 local isShift = false
 function love.keypressed(key, scancode, isrepeat)
-	print(remap.char2id(scancode),scancode,key)
 	screen:inputKey(remap.char2id(key) or 0,isrepeat and 2 or 1)
 end
 
