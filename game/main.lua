@@ -322,12 +322,21 @@ screen:addChild(box)
 
 --────────────────────────-< GNUI Boilerplate >-────────────────────────--
 
+
 love.keyboard.setKeyRepeat(true)
+
 local font
 function love.load()
 	font = love.graphics.newFont("lib/GNUI/style/theme/Javacraft.otf", 5)
 	love.graphics.setFont(font)
 	font:setLineHeight(2)
+	
+end
+
+function love.resize(w, h)
+-- get real dimensions
+  WindowWidth = w
+  WindowHeight = h
 end
 
 local utils = require("lib.GNUI.utils")
